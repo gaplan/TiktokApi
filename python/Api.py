@@ -14,7 +14,7 @@ class Api:
     TIKTOK_APPID = 1180  #appId 根据TikTok的美版或欧版来区分 或者为1180 1233
 
     @staticmethod
-    def send(funcname:str, params:list[str]) -> str:
+    def send(funcname, params):
         resp = requests.post(Api.URL, json={
             'token': Api.TOKEN,
             'appId': Api.TIKTOK_APPID,
@@ -24,7 +24,7 @@ class Api:
         if resp.status_code != 200:
             return None
 
-        jsonObj:dict = json.loads(resp.content)
+        jsonObj = json.loads(resp.content)
         if 'error' in jsonObj:
             return jsonObj['error']
             
@@ -33,7 +33,7 @@ class Api:
 
 class XLadon:
     @staticmethod
-    def encrypt(x_khronos:int, lc_id:str) -> str:
+    def encrypt(x_khronos, lc_id):
         """
         加密X-Ladon字符串
         """
@@ -43,7 +43,7 @@ class XLadon:
         ])
 
     @staticmethod
-    def decrypt(xladon:str) -> str:
+    def decrypt(xladon):
         """
         解密X-Ladon字符串
         """
@@ -54,14 +54,14 @@ class XLadon:
 
 class XGorgon:
     @staticmethod
-    def build(url_query_md5_hex:str, x_ss_stub:str, sdkver:int, x_khronos:int) -> str:
+    def build(url_query_md5_hex, x_ss_stub, sdkver, x_khronos):
         default_str = '00000000'
         if url_query_md5_hex == None or len(url_query_md5_hex) == 0:
             url_query_md5_hex = md5('').hexdigest()[0:8]
         
         if x_ss_stub == None or len(x_ss_stub) == 0:
             x_ss_stub = default_str
-	else:
+        else:
             x_ss_stub = x_ss_stub[0:8]
 
         sdkver_hex = sdkver.to_bytes(8, 'big').hex()
@@ -70,13 +70,13 @@ class XGorgon:
         return XGorgon.encrypt(buildstr)
 
     @staticmethod
-    def encrypt(buildstr:str) -> str:
+    def encrypt(buildstr):
         return Api.send('XGorgon_encrypt', [
             buildstr
         ])
 	
     @staticmethod
-    def decrypt(xgorgon:str) -> str:
+    def decrypt(xgorgon):
         return Api.send('XGorgon_decrypt', [
             xgorgon
         ])
@@ -84,7 +84,7 @@ class XGorgon:
 
 class XCylons:
     @staticmethod
-    def encrypt(query_md5_hex:str, lc_id:str, timestamp:int) -> str:
+    def encrypt(query_md5_hex, lc_id, timestamp):
         return Api.send('XCylons_encrypt', [
             query_md5_hex,
 			lc_id,
@@ -92,7 +92,7 @@ class XCylons:
         ])
 
     @staticmethod
-    def decrypt(xcylons:str) -> str:
+    def decrypt(xcylons):
         return Api.send('XCylons_decrypt', [
             xcylons
         ])
@@ -100,7 +100,7 @@ class XCylons:
 
 class XArgus:
     @staticmethod
-    def get_argus() -> dict:
+    def get_argus():
         timestamp = int(time.time()) << 1
         return {
             1:0x20200929 << 1,   #magic
@@ -129,25 +129,25 @@ class XArgus:
         }
 
     @staticmethod
-    def encrypt(xargus_bean:dict) -> str:
+    def encrypt(xargus_bean):
         return Api.send('XArgus_encrypt', [
             ProtoBuf(xargus_bean).toBuf().hex()
         ])
 
     @staticmethod
-    def decrypt(xargus:str) -> dict:
+    def decrypt(xargus):
         resp = Api.send('XArgus_decrypt', [ xargus ])
         pb = ProtoBuf(bytes.fromhex(resp))
         return pb.toDict(XArgus.get_argus())
 
 class TokenReqCryptor:
-    def encrypt(hex:str) -> str:
+    def encrypt(hex):
         """
         加密/sdi/get_token请求body中的部分数据
         """
         return Api.send('TokenReq_encrypt', [hex])
 
-    def decrypt(hex:str) -> str:
+    def decrypt(hex):
         """
         解密/sdi/get_token请求body中的部分数据
         """
@@ -155,13 +155,13 @@ class TokenReqCryptor:
 
 
 class TCCryptor:
-    def encrypt(hex:str) -> str:
+    def encrypt(hex):
         """
         加密/service/2/device_register/请求body
         """
         return Api.send('TCCryptor_encrypt', [hex])
 
-    def decrypt(hex:str) -> str:
+    def decrypt(hex):
         """
         解密/service/2/device_register/请求body
         """
@@ -213,7 +213,7 @@ def testXCylons() :
     print(ss2)
     print(ss2 == (xcylons))
 
-def read_file(filename:str) -> bytes:
+def read_file(filename) -> bytes:
     with open(filename, 'rb') as f:
         return f.read()
     return None
