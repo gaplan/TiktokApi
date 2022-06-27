@@ -61,6 +61,8 @@ class XGorgon:
         
         if x_ss_stub == None or len(x_ss_stub) == 0:
             x_ss_stub = default_str
+	else:
+            x_ss_stub = x_ss_stub[0:8]
 
         sdkver_hex = sdkver.to_bytes(8, 'big').hex()
         time_hex = x_khronos.to_bytes(8, 'big').hex()
