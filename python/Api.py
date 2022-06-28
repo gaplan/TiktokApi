@@ -100,6 +100,18 @@ class XCylons:
 
 class XArgus:
     @staticmethod
+    def get_bodyhash(x_ss_stub=None):
+        if(x_ss_stub == None or len(x_ss_stub) == 0):
+            return sm3_hash(bytes(16))[0:6]
+        return sm3_hash(bytes.fromhex(x_ss_stub))[0:6]
+    
+    @staticmethod
+    def get_queryhash(query):
+        if(query == None or len(query) == 0):
+            return sm3_hash(bytes(16))[0:6]
+        return sm3_hash(query.encode('utf-8'))[0:6]
+
+    @staticmethod
     def get_argus():
         timestamp = int(time.time()) << 1
         return {
@@ -115,8 +127,8 @@ class XArgus:
             10:bytes(8),    #envcode  越狱检测
             11:1,           #platform
             12:timestamp,   #createTime
-            13:b'',         #bodyHash
-            14:b'',         #queryHash
+            13:XArgus.get_bodyhash(None),         #bodyHash
+            14:XArgus.get_queryhash(None),         #queryHash
             15: {
                 1: 0,       #signCount
                 2: 0,       #reportCount

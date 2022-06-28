@@ -98,8 +98,8 @@ public class FollowRequest {
 		xArgus.envcode = ByteString.decodeHex("0000000000000000"); //越狱检测
 		xArgus.platform = 1;
 		xArgus.createTime = x_khronos << 1;
-		xArgus.bodyHash = ByteString.of(SM3.hash(HexUtil.toBytes(x_ss_stub)));
-		xArgus.queryHash = ByteString.of(SM3.hash(query.getBytes()));
+		xArgus.bodyHash = ByteString.of(SM3.hash(HexUtil.toBytes(x_ss_stub)), 0, 6);
+		xArgus.queryHash = ByteString.of(SM3.hash(query.getBytes()), 0, 6);
 		xArgus.actionRecord = new ActionRecord();
 		xArgus.actionRecord.reportCount = 4;
 		xArgus.actionRecord.settingCount = 1388734;
