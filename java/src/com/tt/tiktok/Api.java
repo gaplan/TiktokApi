@@ -101,7 +101,7 @@ public class Api {
 			if(Utils.isBlank(x_ss_stub)){
 				x_ss_stub = defaultStr;
 			}
-			String sdkver_hex = HexUtil.toString(Bytes.toBytes(new int[]{sdkver}, true));
+			String sdkver_hex = HexUtil.toString(Bytes.toBytes(new int[]{sdkver}, false));
 			String time_hex = HexUtil.toString(Bytes.toBytes(new int[]{x_khronos}, true));
 			return String.format("%s%s%s%s%s", url_query_md5_hex, x_ss_stub, defaultStr, sdkver_hex, time_hex);
 		}
